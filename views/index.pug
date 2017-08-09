@@ -8,7 +8,7 @@ html(lang='en')
 
   body
     .container
-      .form-group.col-md-4.col-md-offset-4
+      .form-group.col-md-8.col-md-offset-2
         h1
           | To-Do
           small List
@@ -17,12 +17,17 @@ html(lang='en')
             input.form-control.input-lg(type='text', placeholder='Type a new task...', name='task', autofocus)
             span.input-group-btn
               button.btn.btn-primary.input-lg(type='button') Add Task!
-      div.col-md-4.col-md-offset-4
+      div.col-md-8.col-md-offset-2
         ul#todo.list-group
           each task in tasks
             li.list-group-item.task-item(class= task.done && 'task-done')
               button.done.btn.btn-primary done
-              span= task.title
+              div.title-box
+                span= task.title
+                  i.glyphicon.glyphicon-pencil
+                form
+                  input(value=task.title)
+              small= moment(task.createdAt).format('DD-MM-YYYY hh:mm')
               input.task-id(type='hidden', value=task.id)
               button.remove.btn.btn-danger.pull-right remove
 

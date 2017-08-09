@@ -1,16 +1,18 @@
 const express = require('express');
 const path = require('path')
 const bodyParser = require('body-parser')
+const moment = require('moment')
 
 const app = express()
 const pathPublic = path.join(__dirname, 'public')
 const PORT = 3000
 
-app.use( express.static(pathPublic) )
-app.use( bodyParser.urlencoded({ extended: false }) )
-app.use( bodyParser.json() )
+app.use(express.static(pathPublic))
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 app.set('view engine', 'pug')
+app.locals.moment = moment
 
 let tasks = [
   {
@@ -57,11 +59,15 @@ app.delete('/task/:id', (req,res) => {
   res.send(`element w/ id ${id} has been removed`)
 })
 
-app.put('/task/:id', (req,res) => {
+app.put('/task/:id', (req, res) => {
   const id = +req.params.id
   const done = req.body.done === 'true' ? true : false
+  const title = req.body.title
   tasks = tasks.map( task => {
-    if (task.id === id) task.done = done
+    if (task.id === id) {
+      task.done = done
+      task.title = title ? title : task.title
+    }
     return task
   })
   res.send(`element w/ id ${id} has been updated`)
