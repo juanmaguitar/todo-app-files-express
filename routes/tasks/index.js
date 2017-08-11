@@ -1,23 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-let counter = 3
-let tasks = global.tasks
+const showTasks = require('./handlers/showTasks')
+const addTasks = require('./handlers/addTasks')
 
-router.get('/', (req,res) => {
-  res.render('index', { tasks: req.session.tasks })
-})
-
-router.post('/tasks', (req,res) => {
-  const title = req.body.task
-  const newTask = {
-    id: ++counter,
-    title,
-    done: false,
-    createdAt: +(new Date())
-  }
-  req.session.tasks.push(newTask)
-  res.redirect('/')
-})
+router.get('/tasks', showTasks)
+router.post('/tasks', addTasks)
 
 module.exports = router

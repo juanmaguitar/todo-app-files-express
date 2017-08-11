@@ -1,16 +1,5 @@
-.container {
-  padding-bottom: 50px;
-}
-form {
-    display: inline-block;
-}
-.form-group {
-    text-align: center;
-    padding-bottom: 25px;
-}
-
-a.close {
-  float: right;
+.login-block {
+  margin-top: 30px;
 }
 
 .task-item span {
