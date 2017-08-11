@@ -1,6 +1,6 @@
 function handleLogout (req,res) {
   req.session = process.tasks = null
-  clearInterval(global.IdPersistanceTasks)
+  clearInterval(process.IdPersistanceTasks)
   console.log('❗ LOGOUT!!')
   res.redirect('/login')
 }

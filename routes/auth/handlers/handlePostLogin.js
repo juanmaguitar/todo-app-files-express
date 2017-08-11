@@ -18,10 +18,11 @@ function handlePostLogin (req, res) {
         const pathUserTasks = path.join(process.cwd(), `data/tasks/${email}.json`)
         req.session.userLogged = email
 
-        global.IdPersistanceTasks = setInterval( () => {
+        process.IdPersistanceTasks = setInterval(() => {
           fs.writeFileSync(pathUserTasks, JSON.stringify(process.tasks))
-          console.log(`💾 writing ${ process.tasks.length} tasks to ${pathUserTasks}`)
+          console.log(`💾 writing ${process.tasks.length} tasks to ${pathUserTasks}`)
         }, 2000)
+        
         res.redirect('/tasks')
       } else {
         res.send('💀 Unauthorized!!')
