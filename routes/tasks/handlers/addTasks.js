@@ -1,4 +1,6 @@
 const uniqid = require('uniqid')
+const path = require('path')
+const { addTask } = require(path.join(process.cwd(), 'models/Task'))
 
 function addTasks (req, res) {
   const title = req.body.task
@@ -8,7 +10,7 @@ function addTasks (req, res) {
     done: false,
     createdAt: +(new Date())
   }
-  process.tasks = process.tasks.concat([newTask])
+  addTask(newTask)
   res.redirect('/tasks')
 }
 

@@ -1,17 +1,17 @@
 const path = require('path')
 const fs = require('fs')
+const { loadTasks } = require(path.join(process.cwd(), 'models/Task'))
 
-function loadUserTasks (req, res, next) {
+function loadUserTasks (app, req, res, next) {
   let { userLogged, dataLoaded } = req.session
-
   if (userLogged && !dataLoaded) {
     const pathTasks = path.join(process.cwd(), `data/tasks/${userLogged}.json`)
     if (fs.existsSync(pathTasks)) {
-      process.tasks = require(pathTasks)
+      const userFileTasks = require(pathTasks)
+      loadTasks(userFileTasks)
       req.session.dataLoaded = true
-      console.log('data loaded from file...')
-    }
-    else {
+      console.log(`data loaded ${userFileTasks.length} from file...`)
+    } else {
       console.log(`not found ${pathTasks}`)
     }
   }

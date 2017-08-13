@@ -1,7 +1,10 @@
+const path = require('path')
+const { getTasks } = require(path.join(process.cwd(), 'models/Task'))
+
 function showTasks (req, res) {
   let { userLogged } = req.session
-  let { tasks } = process
-
+  const tasks = getTasks()
+  console.log(tasks)
   res.render('tasks', { tasks, userLogged })
 }
 
