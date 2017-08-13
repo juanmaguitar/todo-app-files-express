@@ -10,8 +10,9 @@ function loadUserTasks (app, req, res, next) {
       const userFileTasks = require(pathTasks)
       loadTasks(userFileTasks)
       req.session.dataLoaded = true
-      console.log(`data loaded ${userFileTasks.length} from file...`)
+      console.log(`Loaded ${userFileTasks.length} tasks from file ${pathTasks}...`)
     } else {
+      loadTasks([])
       console.log(`not found ${pathTasks}`)
     }
   }
