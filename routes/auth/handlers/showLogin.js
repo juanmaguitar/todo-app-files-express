@@ -1,8 +1,5 @@
-function showLogin (req, res) {
-  if (req.session.userLogged){
-    const {userLogged} = req.session
-    res.redirect('/tasks')
-  }
+function showLogin ({userLogged}, res) {
+  if (userLogged) res.redirect('/tasks')
   else res.render('login')
 }
 

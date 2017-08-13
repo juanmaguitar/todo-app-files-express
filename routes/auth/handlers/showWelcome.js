@@ -1,11 +1,6 @@
-function showWelcome (req, res) {
-  if (!req.session.userLogged) res.redirect('/login')
-  else {
-    res.render('welcome', {
-      userLogged: req.session.userLogged
-    })
-  }
-
+function showWelcome ({ userLogged }, res) {
+  if (!userLogged) res.redirect('/login')
+  else res.render('welcome', { userLogged })
 }
 
 module.exports = showWelcome

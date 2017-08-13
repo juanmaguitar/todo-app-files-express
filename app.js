@@ -1,6 +1,5 @@
 const express = require('express')
 const path = require('path')
-const fs = require('fs')
 const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const moment = require('moment')
@@ -8,6 +7,9 @@ const moment = require('moment')
 const routesAuth = require('./routes/auth/')
 const routesTasks = require('./routes/tasks/')
 const routesTask = require('./routes/task/')
+
+const middInitTasks = require('./middlewares/initTasks')
+const middLoadUserTasks = require('./middlewares/loadUserTasks')
 
 const app = express()
 const pathPublic = path.join(__dirname, 'public')
@@ -24,28 +26,10 @@ app.use(bodyParser.json())
 
 app.set('view engine', 'pug')
 app.locals.moment = moment
+app.locals.tasks = []
 
-app.use( (req, res, next) => {
-  process.tasks = process.tasks || []
-  next()
-})
-
-app.use((req, res, next) => {
-  let { userLogged, dataLoaded } = req.session
-
-  if (userLogged && !dataLoaded) {
-    const pathTasks = path.join(process.cwd(), `data/tasks/${userLogged}.json`)
-    if (fs.existsSync(pathTasks)) {
-      process.tasks = require(pathTasks)
-      req.session.dataLoaded = true
-      console.log('data loaded from file...')
-    }
-    else {
-      console.log(`not found ${pathTasks}`)
-    }
-  }
-  next()
-})
+app.use(middInitTasks)
+app.use(middLoadUserTasks)
 
 app.use(routesAuth)
 app.use(routesTasks)
