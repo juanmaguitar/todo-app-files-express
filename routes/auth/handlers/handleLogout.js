@@ -1,10 +1,8 @@
-const path = require('path')
-const { clearTasks } = require(path.join(process.cwd(), 'models/tasks'))
-
 function handleLogout (req, res) {
+  const { ServiceTasks } = req.app.locals
   clearInterval(process.IdPersistanceTasks)
   req.session = null
-  clearTasks()
+  ServiceTasks.clearTasks()
   console.log('❗ LOGOUT!!')
   res.redirect('/login')
 }

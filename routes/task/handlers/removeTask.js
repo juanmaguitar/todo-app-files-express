@@ -1,9 +1,7 @@
-const path = require('path')
-const { removeTask: _removeTask } = require(path.join(process.cwd(), 'models/tasks'))
-
 function removeTask (req, res) {
+  const { ServiceTasks } = req.app.locals
   const id = req.params.id
-  _removeTask(id)
+  ServiceTasks.removeTask(id)
   res.status(200).send(`element w/ id ${id} has been removed`)
 }
 

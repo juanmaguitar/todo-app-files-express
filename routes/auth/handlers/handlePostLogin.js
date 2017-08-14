@@ -2,9 +2,9 @@ const path = require('path')
 const fs = require('fs')
 const moment = require('moment')
 const readFile = require('fs-readfile-promise')
-const { getTasks } = require(path.join(process.cwd(), 'models/tasks'))
 
 function handlePostLogin (req, res) {
+  const { ServiceTasks } = req.app.locals
   const { email, password } = req.body
   const pathUsersList = path.join(process.cwd(), 'data/users.txt')
 
@@ -16,7 +16,7 @@ function handlePostLogin (req, res) {
         const pathUserTasks = path.join(process.cwd(), `data/tasks/${email}.json`)
         req.session.userLogged = email
         process.IdPersistanceTasks = setInterval(function () {
-          const tasks = getTasks()
+          const tasks = ServiceTasks.getTasks()
           fs.writeFileSync(pathUserTasks, JSON.stringify(tasks, null, 2))
           console.log(`💾 ${moment().format('hh:mm:ss')} writing ${tasks.length} tasks to ${pathUserTasks}`)
         }, 1000)

@@ -4,6 +4,10 @@ const bodyParser = require('body-parser')
 const cookieSession = require('cookie-session')
 const moment = require('moment')
 
+const routesAuth = require('./routes/auth/')
+const routesTasks = require('./routes/tasks/')
+const routesTask = require('./routes/task/')
+
 const middLoadUserTasks = require('./middlewares/loadUserTasks')
 const middDebugRoutes = require('./middlewares/debug')
 
@@ -22,14 +26,15 @@ app.use(bodyParser.json())
 
 app.set('view engine', 'pug')
 app.locals.moment = moment
+app.locals.ServiceTasks = require('./services/tasks')
 
-app.use(middLoadUserTasks.bind(null, app))
+app.use(middLoadUserTasks)
 app.use(middDebugRoutes)
 
 // add routes
-require('./routes/auth/')(app)
-require('./routes/tasks/')(app)
-require('./routes/task/')(app)
+app.use(routesAuth)
+app.use(routesTasks)
+app.use(routesTask)
 
 app.listen(PORT)
 console.log(`Listening on PORT ${PORT}`)

@@ -1,9 +1,10 @@
+const express = require('express')
+const router = express.Router()
+
 const showTasks = require('./handlers/showTasks')
 const addTasks = require('./handlers/addTasks')
 
-function addTasksRoutes (app) {
-  app.get('/tasks', showTasks)
-  app.post('/tasks', addTasks)
-}
+router.get('/tasks', showTasks)
+router.post('/tasks', addTasks)
 
-module.exports = addTasksRoutes
+module.exports = router

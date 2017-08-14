@@ -28,8 +28,6 @@ function updateTask (id, {done, title}) {
     return task
   })
   _tasks = JSON.stringify(updatedTasks)
-  console.log('updateTask');
-  console.log(_tasks);
 }
 
 function removeTask (id) {
@@ -38,4 +36,11 @@ function removeTask (id) {
   _tasks = JSON.stringify(tasks)
 }
 
-module.exports = { getTasks, loadTasks, addTask, updateTask, removeTask, clearTasks }
+module.exports = {
+  getTasks,
+  loadTasks,
+  addTask,
+  updateTask,
+  removeTask,
+  clearTasks
+}

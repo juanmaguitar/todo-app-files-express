@@ -1,8 +1,7 @@
 const uniqid = require('uniqid')
-const path = require('path')
-const { addTask } = require(path.join(process.cwd(), 'models/tasks'))
 
 function addTasks (req, res) {
+  const { ServiceTasks } = req.app.locals
   const title = req.body.task
   const newTask = {
     id: uniqid(),
@@ -10,7 +9,7 @@ function addTasks (req, res) {
     done: false,
     createdAt: +(new Date())
   }
-  addTask(newTask)
+  ServiceTasks.addTask(newTask)
   res.redirect('/tasks')
 }
 

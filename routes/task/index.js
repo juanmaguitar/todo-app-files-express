@@ -1,9 +1,10 @@
+const express = require('express')
+const router = express.Router()
+
 const removeTask = require('./handlers/removeTask')
 const updateTask = require('./handlers/updateTask')
 
-function addTaskRoutes (app) {
-  app.delete('/task/:id', removeTask)
-  app.put('/task/:id', updateTask)
-}
+router.delete('/task/:id', removeTask)
+router.put('/task/:id', updateTask)
 
-module.exports = addTaskRoutes
+module.exports = router
