@@ -2,7 +2,7 @@
 
 ## Description
 
-This app allow the login of users listed in `/data/users.txt` and allows them to manada a to-do list. All tasks will be stored in different files at `/data/tasks/` and assigned to the users when the logged into the app
+This app allow the login of users listed in `/data/users.txt` and allows them to manage a to-do list. All tasks will be stored in different files at `/data/tasks/` and assigned to the users when they logged into the app
 
 ## Installation & Launch
 
