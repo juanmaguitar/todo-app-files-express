@@ -1,11 +1,22 @@
 const fs = require('fs')
 const path = require('path')
+const moment = require('moment')
 const clearRequire = require('clear-require')
 
-let _tasks = "[]"
+let _tasks = '[]'
+let idInterval
 
 function getTasks () {
   return JSON.parse(_tasks)
+}
+
+function persistTasks (userLogged) {
+  const pathUserTasks = path.join(process.cwd(), `data/tasks/${userLogged}.json`)
+  idInterval = setInterval(function () {
+    const tasks = getTasks()
+    fs.writeFileSync(pathUserTasks, JSON.stringify(tasks, null, 2))
+    console.log(`💾 ${moment().format('hh:mm:ss')} writing ${tasks.length} tasks to ${pathUserTasks}`)
+  }, 1000)
 }
 
 function loadTasks (userLogged) {
@@ -22,6 +33,7 @@ function loadTasks (userLogged) {
 }
 
 function clearTasks () {
+  clearInterval(idInterval)
   _tasks = null
 }
 
@@ -55,5 +67,6 @@ module.exports = {
   addTask,
   updateTask,
   removeTask,
+  persistTasks,
   clearTasks
 }
