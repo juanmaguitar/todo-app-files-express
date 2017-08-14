@@ -1,6 +1,6 @@
 const uniqid = require('uniqid')
 const path = require('path')
-const { addTask } = require(path.join(process.cwd(), 'models/Task'))
+const { addTask } = require(path.join(process.cwd(), 'models/tasks'))
 
 function addTasks (req, res) {
   const title = req.body.task

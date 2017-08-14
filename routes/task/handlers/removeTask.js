@@ -1,5 +1,5 @@
 const path = require('path')
-const { removeTask: _removeTask } = require(path.join(process.cwd(), 'models/Task'))
+const { removeTask: _removeTask } = require(path.join(process.cwd(), 'models/tasks'))
 
 function removeTask (req, res) {
   const id = req.params.id

@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const moment = require('moment')
 const readFile = require('fs-readfile-promise')
-const { getTasks } = require(path.join(process.cwd(), 'models/Task'))
+const { getTasks } = require(path.join(process.cwd(), 'models/tasks'))
 
 function handlePostLogin (req, res) {
   const { email, password } = req.body
