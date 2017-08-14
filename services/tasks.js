@@ -1,11 +1,24 @@
+const fs = require('fs')
+const path = require('path')
+const clearRequire = require('clear-require')
+
 let _tasks = "[]"
 
 function getTasks () {
   return JSON.parse(_tasks)
 }
 
-function loadTasks (fileTasks) {
-  _tasks = JSON.stringify(fileTasks)
+function loadTasks (userLogged) {
+  const pathTasks = path.join(process.cwd(), `data/tasks/${userLogged}.json`)
+  if (fs.existsSync(pathTasks)) {
+    clearRequire(pathTasks)
+    const userFileTasks = require(pathTasks)
+    _tasks = JSON.stringify(userFileTasks)
+    console.log(`Loaded ${userFileTasks.length} tasks from file ${pathTasks}...`)
+  } else {
+    _tasks = JSON.stringify([])
+    console.log(`not found ${pathTasks}`)
+  }
 }
 
 function clearTasks () {
