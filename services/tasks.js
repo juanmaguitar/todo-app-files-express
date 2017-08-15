@@ -82,10 +82,9 @@ function _log (action, path, tasks) {
   const numTasks = tasks.length
   let message
 
-  console.log("aaaaa")
   switch (action) {
     case 'SAVE':
-      message = `💾 ${time} writing ${numTasks} tasks to ${path}...`
+      message = `💾 ${time} | Change detected! Writing ${numTasks} tasks to ${path}...`
       break
     case 'LOAD':
       message = `😄 Loaded ${numTasks} tasks from file ${path}`
