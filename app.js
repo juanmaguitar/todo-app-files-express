@@ -8,7 +8,6 @@ const routesAuth = require('./routes/auth/')
 const routesTasks = require('./routes/tasks/')
 const routesTask = require('./routes/task/')
 
-const middLoadUserTasks = require('./middlewares/loadUserTasks')
 const middDebugRoutes = require('./middlewares/debug')
 
 const StoreTasks = require('./services/tasks')
@@ -30,7 +29,6 @@ app.set('view engine', 'pug')
 app.locals.moment = moment
 app.locals.ServiceTasks = new StoreTasks()
 
-app.use(middLoadUserTasks)
 app.use(middDebugRoutes)
 
 // add routes

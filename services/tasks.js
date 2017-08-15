@@ -3,41 +3,43 @@ const path = require('path')
 const moment = require('moment')
 const uniqid = require('uniqid')
 const clearRequire = require('clear-require')
-const EventEmitter = require('events');
+const EventEmitter = require('events')
 
 class StoreTasks extends EventEmitter {
   constructor () {
     super()
     this.store = { tasks: [] }
+    this.userLogged = null
+
+    this.persistTasks = this.persistTasks.bind(this)
+    this.on('change', this.persistTasks)
   }
 
   getTasks () {
     return this.store.tasks
   }
 
-  persistTasks (userLogged) {
-    const pathUserTasks = path.join(process.cwd(), `data/tasks/${userLogged}.json`)
-    this.idInterval = setInterval(() => {
-      fs.writeFileSync(pathUserTasks, JSON.stringify(this.store.tasks, null, 2))
-      console.log(`💾 ${moment().format('hh:mm:ss')} writing ${this.store.tasks.length} tasks to ${pathUserTasks}`)
-    }, 1000)
+  persistTasks () {
+    const path = _pathUserTasks(this.userLogged)
+    fs.writeFileSync(path, JSON.stringify(this.store.tasks, null, 2))
+    _log('SAVE', path, this.store.tasks)
   }
 
   loadTasks (userLogged) {
-    const pathTasks = path.join(process.cwd(), `data/tasks/${userLogged}.json`)
-    if (fs.existsSync(pathTasks)) {
-      clearRequire(pathTasks)
-      this.store.tasks = require(pathTasks)
-      console.log(`Loaded ${this.store.tasks.length} tasks from file ${pathTasks}...`)
+    this.userLogged = userLogged
+    const path = _pathUserTasks(this.userLogged)
+    if (fs.existsSync(path)) {
+      clearRequire(path)
+      this.store.tasks = require(path)
+      _log('LOAD', path, this.store.tasks)
     } else {
       this.store.tasks = []
-      console.log(`not found ${pathTasks}`)
+      _log('NOT FOUND', path)
     }
   }
 
   clearTasks () {
-    clearInterval(this.idInterval)
-    this.store.tasks = null
+    this.userLogged = this.store.tasks = null
   }
 
   addTask (title) {
@@ -48,6 +50,7 @@ class StoreTasks extends EventEmitter {
       createdAt: +(new Date())
     }
     this.store.tasks.push(newTask)
+    this.emit('change')
   }
 
   updateTask (id, {done, title}) {
@@ -58,12 +61,43 @@ class StoreTasks extends EventEmitter {
       }
       return task
     })
+    this.emit('change')
   }
 
   removeTask (id) {
     this.store.tasks = this.store.tasks.filter(task => task.id !== id)
+    this.emit('change')
   }
 
+}
+
+/* HELPERS */
+
+function _pathUserTasks (user) {
+  return path.join(process.cwd(), `data/tasks/${user}.json`)
+}
+
+function _log (action, path, tasks) {
+  const time = moment().format('hh:mm:ss')
+  const numTasks = tasks.length
+  let message
+
+  console.log("aaaaa")
+  switch (action) {
+    case 'SAVE':
+      message = `💾 ${time} writing ${numTasks} tasks to ${path}...`
+      break
+    case 'LOAD':
+      message = `😄 Loaded ${numTasks} tasks from file ${path}`
+      break
+    case 'NOT FOUND':
+      message = `❗ Not found ${path}`
+      break
+    default:
+      message = `⁉️ Action unknown`
+      break
+  }
+  console.log(message)
 }
 
 module.exports = StoreTasks
