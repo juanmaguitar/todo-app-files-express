@@ -2,32 +2,14 @@
   {
     "id": "8z0011erj6c5tfcp",
     "title": "buy macbook",
-    "done": false,
+    "done": true,
     "createdAt": 1502715176952
   },
   {
     "id": "8z0011erj6c5ti0u",
     "title": "buy gold",
-    "done": false,
-    "createdAt": 1502715180414
-  },
-  {
-    "id": "8z0011erj6c5tnmm",
-    "title": "buy brand new car",
-    "done": false,
-    "createdAt": 1502715187678
-  },
-  {
-    "id": "8z0011erj6c5tqe0",
-    "title": "buy cable for internet",
-    "done": false,
-    "createdAt": 1502715191256
-  },
-  {
-    "id": "8z0011erj6c5tr66",
-    "title": "sdfsdf",
     "done": true,
-    "createdAt": 1502715192270
+    "createdAt": 1502715180414
   },
   {
     "id": "8z0011erj6c5trzl",
