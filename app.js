@@ -11,6 +11,8 @@ const routesTask = require('./routes/task/')
 const middLoadUserTasks = require('./middlewares/loadUserTasks')
 const middDebugRoutes = require('./middlewares/debug')
 
+const StoreTasks = require('./services/tasks')
+
 const app = express()
 const pathPublic = path.join(__dirname, 'public')
 const PORT = 3002
@@ -26,7 +28,7 @@ app.use(bodyParser.json())
 
 app.set('view engine', 'pug')
 app.locals.moment = moment
-app.locals.ServiceTasks = require('./services/tasks')
+app.locals.ServiceTasks = new StoreTasks()
 
 app.use(middLoadUserTasks)
 app.use(middDebugRoutes)
