@@ -15,7 +15,8 @@ class StoreTasks extends EventEmitter {
     this.on('change', this.persistTasks)
   }
 
-  getTasks () {
+  getTasks (userLogged) {
+    if (!this.userLogged) this.loadTasks(userLogged)
     return this.store.tasks
   }
 

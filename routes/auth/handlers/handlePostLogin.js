@@ -12,7 +12,6 @@ function handlePostLogin (req, res) {
     .then(bDoesExist => {
       if (bDoesExist) {
         req.session.userLogged = email
-        ServiceTasks.loadTasks(email)
         res.redirect('/tasks')
       } else {
         res.send('💀 Unauthorized!!')
