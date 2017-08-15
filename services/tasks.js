@@ -1,21 +1,23 @@
 const fs = require('fs')
 const path = require('path')
 const moment = require('moment')
+const uniqid = require('uniqid')
 const clearRequire = require('clear-require')
 
-let _tasks = '[]'
+const store = {
+  tasks: []
+}
 let idInterval
 
 function getTasks () {
-  return JSON.parse(_tasks)
+  return store.tasks
 }
 
 function persistTasks (userLogged) {
   const pathUserTasks = path.join(process.cwd(), `data/tasks/${userLogged}.json`)
   idInterval = setInterval(function () {
-    const tasks = getTasks()
-    fs.writeFileSync(pathUserTasks, JSON.stringify(tasks, null, 2))
-    console.log(`💾 ${moment().format('hh:mm:ss')} writing ${tasks.length} tasks to ${pathUserTasks}`)
+    fs.writeFileSync(pathUserTasks, JSON.stringify(store.tasks, null, 2))
+    console.log(`💾 ${moment().format('hh:mm:ss')} writing ${store.tasks.length} tasks to ${pathUserTasks}`)
   }, 1000)
 }
 
@@ -23,42 +25,41 @@ function loadTasks (userLogged) {
   const pathTasks = path.join(process.cwd(), `data/tasks/${userLogged}.json`)
   if (fs.existsSync(pathTasks)) {
     clearRequire(pathTasks)
-    const userFileTasks = require(pathTasks)
-    _tasks = JSON.stringify(userFileTasks)
-    console.log(`Loaded ${userFileTasks.length} tasks from file ${pathTasks}...`)
+    store.tasks = require(pathTasks)
+    console.log(`Loaded ${store.tasks.length} tasks from file ${pathTasks}...`)
   } else {
-    _tasks = JSON.stringify([])
+    store.tasks = []
     console.log(`not found ${pathTasks}`)
   }
 }
 
 function clearTasks () {
   clearInterval(idInterval)
-  _tasks = null
+  store.tasks = null
 }
 
-function addTask (task) {
-  const tasks = JSON.parse(_tasks)
-  tasks.push(task)
-  _tasks = JSON.stringify(tasks)
+function addTask (title) {
+  const newTask = {
+    id: uniqid(),
+    title,
+    done: false,
+    createdAt: +(new Date())
+  }
+  store.tasks.push(newTask)
 }
 
 function updateTask (id, {done, title}) {
-  let tasks = JSON.parse(_tasks)
-  let updatedTasks = tasks.map(task => {
+  store.tasks = store.tasks.map(task => {
     if (task.id === id) {
       task.done = done || false
       task.title = title || task.title
     }
     return task
   })
-  _tasks = JSON.stringify(updatedTasks)
 }
 
 function removeTask (id) {
-  let tasks = JSON.parse(_tasks)
-  tasks = tasks.filter(task => task.id !== id)
-  _tasks = JSON.stringify(tasks)
+  store.tasks = store.tasks.filter(task => task.id !== id)
 }
 
 module.exports = {
