@@ -8,33 +8,33 @@ const EventEmitter = require('events')
 class StoreTasks extends EventEmitter {
   constructor (userLogged) {
     super()
-    this.store = { tasks: null }
+    this._store = { tasks: null }
     this._pathFile = _pathUserTasks(userLogged)
 
-    this.persistTasks = this.persistTasks.bind(this)
-    this.on('change', this.persistTasks)
+    this._persistTasks = this._persistTasks.bind(this)
+    this.on('change', this._persistTasks)
   }
 
   set tasks (tasks) {
-    this.store.tasks = tasks
+    this._store.tasks = tasks
     this.emit('change')
   }
 
   get tasks () {
-    if (!this.store.tasks) {
-      this.store.tasks = this.loadTasks()
+    if (!this._store.tasks) {
+      this._store.tasks = this._loadTasks()
     }
-    return this.store.tasks
+    return this._store.tasks
   }
 
-  persistTasks () {
-    if (this.store.tasks) {
-      fs.writeFileSync(this._pathFile, JSON.stringify(this.store.tasks, null, 2))
-      _log('SAVE', this._pathFile, this.store.tasks)
+  _persistTasks () {
+    if (this._store.tasks) {
+      fs.writeFileSync(this._pathFile, JSON.stringify(this._store.tasks, null, 2))
+      _log('SAVE', this._pathFile, this._store.tasks)
     }
   }
 
-  loadTasks () {
+  _loadTasks () {
     if (fs.existsSync(this._pathFile)) {
       _log('LOAD', this._pathFile)
       clearRequire(this._pathFile)
@@ -52,11 +52,11 @@ class StoreTasks extends EventEmitter {
       done: false,
       createdAt: +(new Date())
     }
-    this.tasks = this.store.tasks.concat([newTask])
+    this.tasks = this._store.tasks.concat([newTask])
   }
 
   updateTask (id, {done, title}) {
-    this.tasks = this.store.tasks.map(task => {
+    this.tasks = this._store.tasks.map(task => {
       if (task.id === id) {
         task.done = done || false
         task.title = title || task.title
@@ -66,7 +66,7 @@ class StoreTasks extends EventEmitter {
   }
 
   removeTask (id) {
-    this.tasks = this.store.tasks.filter(task => task.id !== id)
+    this.tasks = this._store.tasks.filter(task => task.id !== id)
   }
 
 }
