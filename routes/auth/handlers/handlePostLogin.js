@@ -2,7 +2,6 @@ const path = require('path')
 const readFile = require('fs-readfile-promise')
 
 function handlePostLogin (req, res) {
-  const { ServiceTasks } = req.app.locals
   const { email, password } = req.body
   const pathUsersList = path.join(process.cwd(), 'data/users.txt')
 

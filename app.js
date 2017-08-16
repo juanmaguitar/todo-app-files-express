@@ -31,7 +31,6 @@ app.locals.moment = moment
 app.use((req, res, next) => {
   const {userLogged} = req.session
   if (userLogged && !req.app.locals.ServiceTasks) {
-    console.log('init Store...')
     req.app.locals.ServiceTasks = new StoreTasks(userLogged)
   }
   next()
