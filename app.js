@@ -27,7 +27,15 @@ app.use(bodyParser.json())
 
 app.set('view engine', 'pug')
 app.locals.moment = moment
-app.locals.ServiceTasks = new StoreTasks()
+
+app.use((req, res, next) => {
+  const {userLogged} = req.session
+  if (userLogged && !req.app.locals.ServiceTasks) {
+    console.log('init Store...')
+    req.app.locals.ServiceTasks = new StoreTasks(userLogged)
+  }
+  next()
+})
 
 app.use(middDebugRoutes)
 

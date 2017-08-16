@@ -1,7 +1,5 @@
 function handleLogout (req, res) {
-  const { ServiceTasks } = req.app.locals
-  req.session = null
-  ServiceTasks.clearTasks()
+  req.session = req.app.locals.ServiceTasks = null
   console.log('❗ LOGOUT!!')
   res.redirect('/login')
 }

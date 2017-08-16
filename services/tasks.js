@@ -6,36 +6,43 @@ const clearRequire = require('clear-require')
 const EventEmitter = require('events')
 
 class StoreTasks extends EventEmitter {
-  constructor () {
+  constructor (userLogged) {
     super()
-    this.store = { tasks: [] }
-    this.userLogged = null
+    this.store = { tasks: null }
+    this.userLogged = userLogged
+    this.pathFile = _pathUserTasks(this.userLogged)
 
     this.persistTasks = this.persistTasks.bind(this)
     this.on('change', this.persistTasks)
   }
 
-  getTasks (userLogged) {
-    if (!this.userLogged) this.loadTasks(userLogged)
+  set tasks (tasks) {
+    this.store.tasks = tasks
+    this.emit('change')
+  }
+
+  get tasks () {
+    if (!this.store.tasks) {
+      this.store.tasks = this.loadTasks()
+    }
     return this.store.tasks
   }
 
   persistTasks () {
-    const path = _pathUserTasks(this.userLogged)
-    fs.writeFileSync(path, JSON.stringify(this.store.tasks, null, 2))
-    _log('SAVE', path, this.store.tasks)
+    if (this.store.tasks) {
+      fs.writeFileSync(this.pathFile, JSON.stringify(this.store.tasks, null, 2))
+      _log('SAVE', this.pathFile, this.store.tasks)
+    }
   }
 
-  loadTasks (userLogged) {
-    this.userLogged = userLogged
-    const path = _pathUserTasks(this.userLogged)
-    if (fs.existsSync(path)) {
-      clearRequire(path)
-      this.store.tasks = require(path)
-      _log('LOAD', path, this.store.tasks)
+  loadTasks () {
+    if (fs.existsSync(this.pathFile)) {
+      _log('LOAD', this.pathFile)
+      clearRequire(this.pathFile)
+      return require(this.pathFile)
     } else {
-      this.store.tasks = []
-      _log('NOT FOUND', path)
+      _log('NOT FOUND', this.pathFile)
+      return []
     }
   }
 
@@ -50,24 +57,21 @@ class StoreTasks extends EventEmitter {
       done: false,
       createdAt: +(new Date())
     }
-    this.store.tasks.push(newTask)
-    this.emit('change')
+    this.tasks = this.store.tasks.concat([newTask])
   }
 
   updateTask (id, {done, title}) {
-    this.store.tasks = this.store.tasks.map(task => {
+    this.tasks = this.store.tasks.map(task => {
       if (task.id === id) {
         task.done = done || false
         task.title = title || task.title
       }
       return task
     })
-    this.emit('change')
   }
 
   removeTask (id) {
-    this.store.tasks = this.store.tasks.filter(task => task.id !== id)
-    this.emit('change')
+    this.tasks = this.store.tasks.filter(task => task.id !== id)
   }
 
 }
@@ -80,15 +84,15 @@ function _pathUserTasks (user) {
 
 function _log (action, path, tasks) {
   const time = moment().format('hh:mm:ss')
-  const numTasks = tasks.length
   let message
 
   switch (action) {
     case 'SAVE':
+      const numTasks = tasks.length
       message = `💾 ${time} | Change detected! Writing ${numTasks} tasks to ${path}...`
       break
     case 'LOAD':
-      message = `😄 Loaded ${numTasks} tasks from file ${path}`
+      message = `😄 Loaded data from file ${path}`
       break
     case 'NOT FOUND':
       message = `❗ Not found ${path}`
