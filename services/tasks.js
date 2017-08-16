@@ -9,8 +9,7 @@ class StoreTasks extends EventEmitter {
   constructor (userLogged) {
     super()
     this.store = { tasks: null }
-    this.userLogged = userLogged
-    this.pathFile = _pathUserTasks(this.userLogged)
+    this._pathFile = _pathUserTasks(userLogged)
 
     this.persistTasks = this.persistTasks.bind(this)
     this.on('change', this.persistTasks)
@@ -30,18 +29,18 @@ class StoreTasks extends EventEmitter {
 
   persistTasks () {
     if (this.store.tasks) {
-      fs.writeFileSync(this.pathFile, JSON.stringify(this.store.tasks, null, 2))
-      _log('SAVE', this.pathFile, this.store.tasks)
+      fs.writeFileSync(this._pathFile, JSON.stringify(this.store.tasks, null, 2))
+      _log('SAVE', this._pathFile, this.store.tasks)
     }
   }
 
   loadTasks () {
-    if (fs.existsSync(this.pathFile)) {
-      _log('LOAD', this.pathFile)
-      clearRequire(this.pathFile)
-      return require(this.pathFile)
+    if (fs.existsSync(this._pathFile)) {
+      _log('LOAD', this._pathFile)
+      clearRequire(this._pathFile)
+      return require(this._pathFile)
     } else {
-      _log('NOT FOUND', this.pathFile)
+      _log('NOT FOUND', this._pathFile)
       return []
     }
   }
