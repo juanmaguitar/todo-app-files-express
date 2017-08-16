@@ -46,10 +46,6 @@ class StoreTasks extends EventEmitter {
     }
   }
 
-  clearTasks () {
-    this.userLogged = this.store.tasks = null
-  }
-
   addTask (title) {
     const newTask = {
       id: uniqid(),
