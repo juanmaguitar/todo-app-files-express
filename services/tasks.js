@@ -55,13 +55,15 @@ class StoreTasks extends EventEmitter {
     this.tasks = this._store.tasks.concat([newTask])
   }
 
-  updateTask (id, {done, title}) {
+  updateTask (id, {done=false, title}) {
     this.tasks = this._store.tasks.map(task => {
+      let mTask
       if (task.id === id) {
-        task.done = done || false
-        task.title = title || task.title
+        title = title || task.title
+        mTask = Object.assign( task, { done, title } )
       }
-      return task
+      console.log(mTask || task)
+      return mTask || task
     })
   }
 
